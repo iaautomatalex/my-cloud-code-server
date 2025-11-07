@@ -1,0 +1,21 @@
+FROM ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PASSWORD=Razak/2007
+
+RUN apt-get update && apt-get install -y \
+    curl wget git build-essential python3 python3-pip python3-dev \
+    libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev \
+    libffi-dev libssl-dev libsqlite3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install pygame
+
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash \
+    && bash -c "source /root/.nvm/nvm.sh && nvm install node && nvm use node"
+
+RUN curl -fsSL https://code-server.dev/install.sh | sh
+
+RUN mkdir -p /home/coder/workspace
+EXPOSE 8080
+
+CMD ["code-server", "--bind-addr", "0.0.0.0:8080", "/home/coder/workspace", "--auth", "password", "--password", "Razak/2007"]
